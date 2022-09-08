@@ -1,21 +1,29 @@
 package com.springbootexpert;
 
-import org.springframework.beans.factory.annotation.Value;
+import com.springbootexpert.domain.entity.Cliente;
+import com.springbootexpert.domain.repositorio.Clientes;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.context.annotation.Bean;
+
+import java.util.List;
 
 @SpringBootApplication
-@RestController
 public class SpringBootExpertApplication {
 
-	@Value("${application.name}")
-	private String applicationName;
+	@Bean
+	public CommandLineRunner init(@Autowired Clientes clientes) {
+		return args -> {
+			System.out.println("Salvando clientes");
+			clientes.save(new Cliente("Felipe"));
+			clientes.save(new Cliente("Outro cliente"));
 
-	@GetMapping("/hello")
-	public String helloWorld() {
-		return applicationName;
+			boolean existe = clientes.existByNome("Felipe");
+			System.out.println("Existe um cliente com o nome Felipe? " + existe);
+
+		};
 	}
 
 	public static void main(String[] args) {
